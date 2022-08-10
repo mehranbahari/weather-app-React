@@ -1,13 +1,16 @@
 import { useState } from "react";
+import Spiner from "./component/Spiner";
 
 const App = () => {
   const [show, setShow] = useState({});
   const [active, setActive] = useState("");
+  const [loading, setLoading] = useState(false);
 
   //   const m = 1112cf0f6e8f4e7daf573559212512
 
   const search = (e) => {
     if (e.key === "Enter") {
+      setLoading(true);
       fetch(
         `http://api.weatherapi.com/v1/current.json?key= 1112cf0f6e8f4e7daf573559212512&q=${active}&aqi=no`
       )
@@ -15,7 +18,7 @@ const App = () => {
         .then((data) => {
           setShow(data);
           setActive("");
-          console.log(data);
+          setLoading(false);
         });
     }
   };
@@ -73,7 +76,9 @@ const App = () => {
             onKeyPress={search}
           />
         </div>
-        {typeof show.location != "undefined" ? (
+        {loading ? (
+          <Spiner />
+        ) : typeof show.location != "undefined" ? (
           <div>
             <div className="location-box">
               <div className="location">
